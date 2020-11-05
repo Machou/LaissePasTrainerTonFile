@@ -32,21 +32,24 @@ if(isset($_POST['form']))
                 // On vérifie que le fichier est égale ou inférieur à 1 Mo
                 if(filesize($file_tmp) <= 1000000)
                 {
-                    // On génére un nom unique de fichier pour éviter les doublons
-                    $name = uniqid().'.'.$ext;
-
-                    // Endroit ou sera stocké le fichier
-                    $uploadFile = __DIR__.'/uploads/'.$name;
-
-                    // Si tout est Ok; on peut uploader le fichier sur le serveur
-                    if(move_uploaded_file($file_tmp, $uploadFile))
+                    // On vérifie que le fichier a été uploadé sur le serveur
+                    if(is_uploaded_file($file_tmp))
                     {
+                        // On génére un nom unique de fichier pour éviter les doublons
+                        $name = uniqid().'.'.$ext;
+    
+                        // Endroit ou sera stocké le fichier
+                        $uploadFile = __DIR__.'/uploads/'.$name;
+
+                        // Si tout est Ok; on peut uploader le fichier sur le serveur
+                        move_uploaded_file($file_tmp, $uploadFile);
+
                         echo '<p style="color: green;">Le fichié <strong>'.$name.'</strong> a correctement été uploadé ! :)<br />
                         <em>La boucle est bouclée, le système a la tête sous l\'eau.</em> <strong>NTM</strong></p>';
                     }
 
                     else
-                    echo '<p style="color: red;">Erreur : le fichier n\'a pu être uploadé !</p>';
+                        echo '<p style="color: red;">Erreur : le fichier n\'a pu être uploadé !</p>';
                 }
 
                 else
