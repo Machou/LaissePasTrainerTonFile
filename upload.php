@@ -20,7 +20,7 @@ if(isset($_POST['form']))
             $file_size = $_FILES['avatars']['size'][$i];
 
             // On vérifie que le fichier est une image
-            if(in_array($ext, ['jpg', 'png', 'gif']) && in_array(mime_content_type($file_tmp), ['image/jpg', 'image/png', 'image/gif']))
+            if(in_array($ext, ['jpg', 'jpeg', 'png', 'gif']) && in_array(mime_content_type($file_tmp), ['image/jpg', 'image/jpeg', 'image/png', 'image/gif']))
             {
                 // On vérifie que le fichier est égale ou inférieur à 1 Mo
                 if(filesize($file_tmp) <= 1000000)
