@@ -1,4 +1,11 @@
 <?php
+// On vérifie si le dossier /uploads existe
+if(!is_dir(__DIR__.'/uploads'))
+{
+    $notDirectory = '<div><p style="color: red;">Le dossier <em>/uploads</em> n\'existe pas ! Merci de le créer !</p></div>';
+}
+
+
 // On vérifie que le formulaire est initialiser
 if(isset($_POST['form']))
 {
@@ -32,10 +39,14 @@ if(isset($_POST['form']))
                     $uploadFile = __DIR__.'/uploads/'.$name;
 
                     // Si tout est Ok; on peut uploader le fichier sur le serveur
-                    move_uploaded_file($file_tmp, $uploadFile);
+                    if(move_uploaded_file($file_tmp, $uploadFile))
+                    {
+                        echo '<p style="color: green;">Le fichié <strong>'.$name.'</strong> a correctement été uploadé ! :)<br />
+                        <em>La boucle est bouclée, le système a la tête sous l\'eau.</em> <strong>NTM</strong></p>';
+                    }
 
-                    echo '<p style="color: green;">Le fichié <strong>'.$name.'</strong> a correctement été uploadé ! :)<br />
-                    <em>La boucle est bouclée, le système a la tête sous l\'eau.</em> <strong>NTM</strong></p>';
+                    else
+                    echo '<p style="color: red;">Erreur : le fichier n\'a pu être uploadé !</p>';
                 }
 
                 else
@@ -88,7 +99,7 @@ if(isset($_GET['delete']) && !empty($_GET['delete']))
 
 <body>
 <?= (isset($avatarDeleteSuccess) && !empty($avatarDeleteSuccess)) ? $avatarDeleteSuccess : null; ?>
-
+<?= (isset($notDirectory) && !empty($notDirectory)) ? $notDirectory : null; ?>
 <div>
     <form action="upload.php" method="post"  enctype="multipart/form-data" id="form_upload">
         <label for="files"></label>
@@ -99,20 +110,23 @@ if(isset($_GET['delete']) && !empty($_GET['delete']))
 </div>
 
 <?php
-echo '<div>
-<h4>Liste des images</h4>
-
-<ul>';
-// On Affiche les fichiers dans le dossier /uploads
-$it = new FilesystemIterator(dirname(__FILE__).'/uploads');
-foreach ($it as $fileinfo)
+if(is_dir(__DIR__.'/uploads'))
 {
-    echo '<li style="background-color: #ccc;">
-        <figure><img src="uploads/'.$fileinfo->getFilename().'" alt="" style="height: 100px; width: 100px;"><figcaption>Avatar uploadé le '.date('jS F Y', filemtime('uploads/'.$fileinfo->getFilename())).'</figcaption></figure>
-        <a href="?delete='.$fileinfo->getFilename().'">Supprimer le fichier <em>'.$fileinfo->getFilename().'</em></a>
-    </li>';
+    echo '<div>
+    <h4>Liste des images</h4>
+
+    <ul>';
+    // On Affiche les fichiers dans le dossier /uploads
+    $it = new FilesystemIterator(dirname(__FILE__).'/uploads');
+    foreach ($it as $fileinfo)
+    {
+        echo '<li style="background-color: #ccc;">
+            <figure><img src="uploads/'.$fileinfo->getFilename().'" alt="" style="height: 100px; width: 100px;"><figcaption>Avatar uploadé le '.date('jS F Y', filemtime('uploads/'.$fileinfo->getFilename())).'</figcaption></figure>
+            <a href="?delete='.$fileinfo->getFilename().'">Supprimer le fichier <em>'.$fileinfo->getFilename().'</em></a>
+        </li>';
+    }
+    echo '</ul>';
 }
-echo '</ul>';
 ?>
 </div>
 </body>
