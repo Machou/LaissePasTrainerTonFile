@@ -1,33 +1,4 @@
 <?php
-function p($str)
-{
-    echo '<pre>';
-    print_r($str);
-    echo '</pre>';
-}
-
-
-// Suppression du fichier
-// On vérifie si la variable est défini
-if(isset($_GET['delete']) && !empty($_GET['delete']))
-{
-    $avatarUploaded = __DIR__.'/uploads/'.$_GET['delete'];
-
-    // On vérifie que la fichier existe dans le dossier /uploads
-    if(file_exists($avatarUploaded))
-    {
-        unlink($avatarUploaded);
-
-        $avatarDeleteSuccess = '<div><p style="color: green;">Le fichier <em>'.$avatarUploaded.'</em> a été supprimé avec succès !</p></div>';
-    }
-
-    else
-    {
-        echo '<p style="color: red;">Erreur : le fichier ne peut être supprimé, il n\'exsite pas.</p>';
-    }
-}
-
-
 // On vérifie que le formulaire est initialiser
 if(isset($_POST['form']))
 {
@@ -83,6 +54,27 @@ if(isset($_POST['form']))
     else
     {
         echo '<p style="color: red;">Erreur : aucun fichier detecté !</p>';
+    }
+}
+
+
+// Suppression du fichier
+// On vérifie si la variable est défini
+if(isset($_GET['delete']) && !empty($_GET['delete']))
+{
+    $avatarUploaded = __DIR__.'/uploads/'.$_GET['delete'];
+
+    // On vérifie que la fichier existe dans le dossier /uploads
+    if(file_exists($avatarUploaded))
+    {
+        unlink($avatarUploaded);
+
+        $avatarDeleteSuccess = '<div><p style="color: green;">Le fichier <em>'.$avatarUploaded.'</em> a été supprimé avec succès !</p></div>';
+    }
+
+    else
+    {
+        echo '<p style="color: red;">Erreur : le fichier ne peut être supprimé, il n\'exsite pas.</p>';
     }
 }
 ?>
