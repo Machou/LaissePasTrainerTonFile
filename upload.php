@@ -1,8 +1,12 @@
 <?php
+// On initialise les Messages
+$messages = [];
+
+
 // On vérifie si le dossier /uploads existe
 if(!is_dir(__DIR__.'/uploads'))
 {
-    $notDirectory = '<div><p style="color: red;">Le dossier <em>/uploads</em> n\'existe pas ! Merci de le créer !</p></div>';
+    $messages[] = '<div><p style="color: red;">Le dossier <em>/uploads</em> n\'existe pas ! Merci de le créer !</p></div>';
 }
 
 
@@ -44,31 +48,25 @@ if(isset($_POST['form']))
                         // Si tout est Ok; on peut uploader le fichier sur le serveur
                         move_uploaded_file($file_tmp, $uploadFile);
 
-                        echo '<p style="color: green;">Le fichié <strong>'.$name.'</strong> a correctement été uploadé ! :)<br />
+                        $messages[] = '<p style="color: green;">Le fichié <strong>'.$name.'</strong> a correctement été uploadé ! :)<br />
                         <em>La boucle est bouclée, le système a la tête sous l\'eau.</em> <strong>NTM</strong></p>';
                     }
 
                     else
-                        echo '<p style="color: red;">Erreur : le fichier n\'a pu être uploadé !</p>';
+                        $messages[] = '<p style="color: red;">Erreur : le fichier n\'a pu être uploadé !</p>';
                 }
 
                 else
-                {
-                    echo '<p style="color: red;">Erreur : taille incorrecte !</p>';
-                }
+                    $messages[] = '<p style="color: red;">Erreur : taille incorrecte !</p>';
             }
 
             else
-            {
-                echo '<p style="color: red;">Erreur : extension du fichier incorrecte !</p>';
-            }
+                $messages[] = '<p style="color: red;">Erreur : extension du fichier incorrecte !</p>';
         }
     }
 
     else
-    {
-        echo '<p style="color: red;">Erreur : aucun fichier detecté !</p>';
-    }
+        $messages[] = '<p style="color: red;">Erreur : aucun fichier detecté !</p>';
 }
 
 
@@ -83,13 +81,11 @@ if(isset($_GET['delete']) && !empty($_GET['delete']))
     {
         unlink($avatarUploaded);
 
-        $avatarDeleteSuccess = '<div><p style="color: green;">Le fichier <em>'.$avatarUploaded.'</em> a été supprimé avec succès !</p></div>';
+        $messages[] = '<div><p style="color: green;">Le fichier <em>'.$avatarUploaded.'</em> a été supprimé avec succès !</p></div>';
     }
 
     else
-    {
-        echo '<p style="color: red;">Erreur : le fichier ne peut être supprimé, il n\'exsite pas.</p>';
-    }
+        $messages[] = '<p style="color: red;">Erreur : le fichier ne peut être supprimé, il n\'exsite pas.</p>';
 }
 ?>
 <!DOCTYPE html>
@@ -101,8 +97,10 @@ if(isset($_GET['delete']) && !empty($_GET['delete']))
 </head>
 
 <body>
-<?= (isset($avatarDeleteSuccess) && !empty($avatarDeleteSuccess)) ? $avatarDeleteSuccess : null; ?>
-<?= (isset($notDirectory) && !empty($notDirectory)) ? $notDirectory : null; ?>
+<?php
+foreach($messages as $message)
+    echo $message;
+?>
 <div>
     <form action="upload.php" method="post"  enctype="multipart/form-data" id="form_upload">
         <label for="files"></label>
